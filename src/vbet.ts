@@ -304,36 +304,6 @@ async function scrapeSingleUrl(url: string, leagueName: string): Promise<MatchWi
 }
 
 /**
- * Парсит первую ссылку (Лига Европы)
- */
-async function scrapeEuropaLeague(): Promise<MatchWithOdds[]> {
-  const url = 'https://sport.vbet.am/ru/sports/pre-match/event-view/Soccer/Europe/566/';
-  const league = 'Лига Европы';
-  console.log(`[Vbet] Scraping ${league}...`);
-  return await scrapeSingleUrl(url, league);
-}
-
-/**
- * Парсит вторую ссылку (Лига Европы)
- */
-async function scrapeEuropaLeague2(): Promise<MatchWithOdds[]> {
-  const url = 'https://sport.vbet.am/ru/sports/pre-match/event-view/Soccer/Europe/1861';
-  const league = 'Лига Европы';
-  console.log(`[Vbet] Scraping ${league} (second link)...`);
-  return await scrapeSingleUrl(url, league);
-}
-
-/**
- * Парсит третью ссылку (Лига Европы)
- */
-async function scrapeEuropaLeague3(): Promise<MatchWithOdds[]> {
-  const url = 'https://sport.vbet.am/ru/sports/pre-match/event-view/Soccer/Europe/18278410';
-  const league = 'Лига Европы';
-  console.log(`[Vbet] Scraping ${league} (third link)...`);
-  return await scrapeSingleUrl(url, league);
-}
-
-/**
  * Парсит все страницы vbet.am и извлекает матчи с коэффициентами
  * Парсит каждую ссылку отдельно и объединяет результаты
  */
@@ -345,9 +315,8 @@ export async function scrapeVbetMatches(): Promise<MatchWithOdds[]> {
   const urls = getVbetUrls();
   
   if (urls.length === 0) {
-    console.warn('[Vbet] No URLs configured, using default URLs');
-    // Fallback на старые функции если нет ссылок в конфиге
-    return await scrapeVbetMatchesLegacy();
+    console.warn('[Vbet] No URLs configured in database. Add URLs via admin panel.');
+    return [];
   }
   
   const allMatches: MatchWithOdds[] = [];
@@ -391,32 +360,6 @@ export async function scrapeVbetMatches(): Promise<MatchWithOdds[]> {
   const jsonPath = path.join(process.cwd(), 'debug-vbet.json');
   fs.writeFileSync(jsonPath, JSON.stringify(debugData, null, 2), 'utf-8');
   console.log(`[Vbet] Debug data saved to: ${jsonPath}`);
-  
-  return allMatches;
-}
-
-// Старая функция для обратной совместимости
-async function scrapeVbetMatchesLegacy(): Promise<MatchWithOdds[]> {
-  const allMatches: MatchWithOdds[] = [];
-  
-  const matches1 = await scrapeEuropaLeague();
-  if (matches1.length > 0) {
-    allMatches.push(...matches1);
-  }
-  
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  
-  const matches2 = await scrapeEuropaLeague2();
-  if (matches2.length > 0) {
-    allMatches.push(...matches2);
-  }
-  
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  
-  const matches3 = await scrapeEuropaLeague3();
-  if (matches3.length > 0) {
-    allMatches.push(...matches3);
-  }
   
   return allMatches;
 }

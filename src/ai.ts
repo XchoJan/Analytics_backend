@@ -11,7 +11,8 @@ import {
 } from "./schemas.js";
 import { buildExpressPrompt, buildExpress5Prompt, buildSinglePrompt, buildMatchAnalysisPrompt } from "./prompt.js";
 import { HttpError } from "./errors.js";
-import { scrapeVbetMatches, MatchWithOdds } from "./vbet.js";
+import { MatchWithOdds } from "./vbet.js";
+import { getMatchesFromDb } from "./matchesStore.js";
 import axios from "axios";
 
 // Механизм отслеживания последних выборов для разнообразия
@@ -322,7 +323,7 @@ async function callStrictJson(prompt: string, jsonSchema: unknown, temperature: 
 export async function generateSingle(matchesData?: MatchWithOdds[]): Promise<SinglePrediction> {
   // Если матчи не переданы, получаем их
   if (!matchesData || matchesData.length === 0) {
-    matchesData = await scrapeVbetMatches();
+    matchesData = getMatchesFromDb();
   }
   
   if (matchesData.length === 0) {
@@ -426,7 +427,7 @@ export async function generateSingle(matchesData?: MatchWithOdds[]): Promise<Sin
 export async function generateExpress(matchesData?: MatchWithOdds[]): Promise<ExpressPrediction> {
   // Если матчи не переданы, получаем их
   if (!matchesData || matchesData.length === 0) {
-    matchesData = await scrapeVbetMatches();
+    matchesData = getMatchesFromDb();
   }
   
   if (matchesData.length < 3) {
@@ -521,7 +522,7 @@ export async function generateExpress(matchesData?: MatchWithOdds[]): Promise<Ex
 export async function generateExpress5(matchesData?: MatchWithOdds[]): Promise<Express5Prediction> {
   // Если матчи не переданы, получаем их
   if (!matchesData || matchesData.length === 0) {
-    matchesData = await scrapeVbetMatches();
+    matchesData = getMatchesFromDb();
   }
   
   if (matchesData.length < 5) {

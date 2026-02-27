@@ -45,6 +45,33 @@ try {
   }
 }
 
+// Таблица матчей (кеш от парсинга, обновляется по крону)
+db.exec(`
+  CREATE TABLE IF NOT EXISTS matches (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    homeTeam TEXT NOT NULL,
+    awayTeam TEXT NOT NULL,
+    date TEXT NOT NULL,
+    time TEXT,
+    league TEXT,
+    odds_home REAL NOT NULL,
+    odds_draw REAL NOT NULL,
+    odds_away REAL NOT NULL,
+    updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(homeTeam, awayTeam, date)
+  )
+`);
+
+// Таблица предзаготовленных прогнозов (генерируются кроном 12:00 и 18:00)
+db.exec(`
+  CREATE TABLE IF NOT EXISTS predictions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT NOT NULL,
+    data TEXT NOT NULL,
+    createdAt TEXT NOT NULL DEFAULT (datetime('now'))
+  )
+`);
+
 // Создаем таблицу платежей
 db.exec(`
   CREATE TABLE IF NOT EXISTS payments (

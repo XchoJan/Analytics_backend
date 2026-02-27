@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { generateExpress, generateExpress5, generateSingle, analyzeMatch } from "../ai.js";
-import { scrapeVbetMatches } from "../vbet.js";
+import { analyzeMatch } from "../ai.js";
+import { getMatchesFromDb } from "../matchesStore.js";
+import { getRandomPrediction } from "../predictionsStore.js";
 import { getStats } from "../stats.js";
 import { authMiddleware, AuthRequest } from "../middleware/auth.js";
 import { findUserById, canUsePrediction, updateLastPredictionDate } from "../models/user.js";
@@ -10,8 +11,7 @@ export const predictionRouter = Router();
 
 predictionRouter.get("/matches", async (req, res, next) => {
   try {
-    // Используем vbet
-    const matches = await scrapeVbetMatches();
+    const matches = getMatchesFromDb();
     res.json({ matches });
   } catch (e) {
     next(e);
@@ -34,16 +34,25 @@ predictionRouter.post("/single", authMiddleware, async (req: AuthRequest, res, n
       throw new HttpError(403, 'PREDICTION_LIMIT_REACHED', 'Вы уже использовали бесплатный прогноз сегодня. Оформите подписку для неограниченного доступа.');
     }
 
-    // Получаем матчи из запроса или загружаем их
-    const { matches } = req.body;
-    const result = await generateSingle(matches);
-    
-    // Обновляем дату последнего использования прогноза для не-premium пользователей
+    const result = getRandomPrediction('single');
+    if (!result) {
+      throw new HttpError(503, 'NO_PREDICTIONS', 'Прогнозы обновляются. Попробуйте через несколько минут.');
+    }
+
     if (!user.premium) {
       updateLastPredictionDate(user.id);
     }
-    
-    res.json(result);
+
+    const pred = result as { type: string; match: string; prediction: string; odds: number; confidence: number };
+    res.json({
+      prediction: result,
+      matchAnalysis: {
+        match: pred.match,
+        prediction: pred.prediction,
+        riskPercent: 25,
+        odds: pred.odds,
+      },
+    });
   } catch (e) {
     next(e);
   }
@@ -60,7 +69,6 @@ predictionRouter.post("/express", authMiddleware, async (req: AuthRequest, res, 
       throw new HttpError(401, 'USER_NOT_FOUND', 'Пользователь не найден');
     }
 
-    // Экспресс доступен только для premium пользователей
     if (!user.premium) {
       const now = new Date();
       if (user.premiumUntil) {
@@ -73,9 +81,11 @@ predictionRouter.post("/express", authMiddleware, async (req: AuthRequest, res, 
       }
     }
 
-    // Получаем матчи из запроса или загружаем их
-    const { matches } = req.body;
-    const result = await generateExpress(matches);
+    const result = getRandomPrediction('express');
+    if (!result) {
+      throw new HttpError(503, 'NO_PREDICTIONS', 'Прогнозы обновляются. Попробуйте через несколько минут.');
+    }
+
     res.json(result);
   } catch (e) {
     next(e);
@@ -93,7 +103,6 @@ predictionRouter.post("/express5", authMiddleware, async (req: AuthRequest, res,
       throw new HttpError(401, 'USER_NOT_FOUND', 'Пользователь не найден');
     }
 
-    // Экспресс x5 доступен только для premium пользователей
     if (!user.premium) {
       const now = new Date();
       if (user.premiumUntil) {
@@ -106,9 +115,11 @@ predictionRouter.post("/express5", authMiddleware, async (req: AuthRequest, res,
       }
     }
 
-    // Получаем матчи из запроса или загружаем их
-    const { matches } = req.body;
-    const result = await generateExpress5(matches);
+    const result = getRandomPrediction('express5');
+    if (!result) {
+      throw new HttpError(503, 'NO_PREDICTIONS', 'Прогнозы обновляются. Попробуйте через несколько минут.');
+    }
+
     res.json(result);
   } catch (e) {
     next(e);
@@ -130,15 +141,13 @@ predictionRouter.post("/analyze", async (req, res, next) => {
 
 predictionRouter.get("/matches-with-odds", async (req, res, next) => {
   try {
-    // Устанавливаем таймаут для ответа (2 минуты)
-    req.setTimeout(120000);
-    const matches = await scrapeVbetMatches();
+    const matches = getMatchesFromDb();
     res.json({ matches });
   } catch (e: any) {
     console.error('[matches-with-odds] Error:', e);
     res.status(500).json({ 
       error: 'INTERNAL_ERROR', 
-      message: e.message || 'Failed to scrape matches from vbet.am' 
+      message: e.message || 'Failed to load matches' 
     });
   }
 });

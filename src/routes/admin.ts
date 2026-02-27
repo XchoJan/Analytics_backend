@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { authMiddleware, AuthRequest } from "../middleware/auth.js";
 import { getVbetUrls, setVbetUrls } from "../config.js";
+import { refreshMatches } from "../matchesStore.js";
+import { runPredictionGeneration } from "../predictionCron.js";
+import { getPredictionCounts } from "../predictionsStore.js";
 import { HttpError } from "../errors.js";
 
 export const adminRouter = Router();
@@ -46,7 +49,35 @@ adminRouter.post("/urls", async (req: AuthRequest, res, next) => {
     }
 
     setVbetUrls(urls);
+    // Сразу обновляем матчи по новым ссылкам
+    refreshMatches().catch((err) => console.error('[Admin] Refresh after URL update failed:', err));
     res.json({ success: true, urls: getVbetUrls() });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// Статус прогнозов в БД
+adminRouter.get("/predictions-status", async (req: AuthRequest, res, next) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      throw new HttpError(403, 'FORBIDDEN', 'Доступ запрещен.');
+    }
+    res.json(getPredictionCounts());
+  } catch (e) {
+    next(e);
+  }
+});
+
+// Ручной запуск генерации прогнозов
+adminRouter.post("/generate-predictions", async (req: AuthRequest, res, next) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      throw new HttpError(403, 'FORBIDDEN', 'Доступ запрещен. Требуется роль администратора.');
+    }
+
+    runPredictionGeneration().catch((err) => console.error('[Admin] Generate predictions failed:', err));
+    res.json({ success: true, message: 'Генерация прогнозов запущена. Подождите 2–3 минуты.' });
   } catch (e) {
     next(e);
   }
