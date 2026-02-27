@@ -1,0 +1,469 @@
+{
+  "timestamp": "2026-02-23T17:38:52.790Z",
+  "totalMatchesFound": 38,
+  "urlsUsed": [
+    "https://sport.vbet.am/ru/sports/pre-match/event-view/Soccer/Europe/566/",
+    "https://sport.vbet.am/ru/sports/pre-match/event-view/Soccer/Europe/1861",
+    "https://sport.vbet.am/ru/sports/pre-match/event-view/Soccer/Europe/18278410",
+    "https://sport.vbet.am/ru/sports/pre-match/event-view/Soccer/Europe/1863",
+    "https://sport.vbet.am/ru/sports/pre-match/event-view/Soccer/England/1844"
+  ],
+  "matches": [
+    {
+      "homeTeam": "Атлетико Мадрид",
+      "awayTeam": "Брюгге",
+      "date": "2026-02-24",
+      "time": "21:45",
+      "league": "Лига 1",
+      "odds": {
+        "home": 1.38,
+        "draw": 5.7,
+        "away": 7.5
+      }
+    },
+    {
+      "homeTeam": "Интер Милан",
+      "awayTeam": "ФК Будё-Глимт",
+      "date": "2026-02-25",
+      "time": "00:00",
+      "league": "Лига 1",
+      "odds": {
+        "home": 1.26,
+        "draw": 7.4,
+        "away": 9.8
+      }
+    },
+    {
+      "homeTeam": "Ньюкасл Юнайтед",
+      "awayTeam": "Карабах ФК",
+      "date": "2026-02-25",
+      "time": "00:00",
+      "league": "Лига 1",
+      "odds": {
+        "home": 1.12,
+        "draw": 9.8,
+        "away": 17
+      }
+    },
+    {
+      "homeTeam": "Байер Леверкузен",
+      "awayTeam": "Олимпиакос Пирей",
+      "date": "2026-02-25",
+      "time": "00:00",
+      "league": "Лига 1",
+      "odds": {
+        "home": 1.76,
+        "draw": 3.93,
+        "away": 4.4
+      }
+    },
+    {
+      "homeTeam": "Аталанта",
+      "awayTeam": "Боруссия Дортмунд",
+      "date": "2026-02-25",
+      "time": "21:45",
+      "league": "Лига 1",
+      "odds": {
+        "home": 2.1,
+        "draw": 3.82,
+        "away": 3.21
+      }
+    },
+    {
+      "homeTeam": "Реал Мадрид",
+      "awayTeam": "СЛ Бенфика",
+      "date": "2026-02-26",
+      "time": "00:00",
+      "league": "Лига 1",
+      "odds": {
+        "home": 1.44,
+        "draw": 4.9,
+        "away": 6.6
+      }
+    },
+    {
+      "homeTeam": "ПСЖ",
+      "awayTeam": "АС Монако",
+      "date": "2026-02-26",
+      "time": "00:00",
+      "league": "Лига 1",
+      "odds": {
+        "home": 1.27,
+        "draw": 6.6,
+        "away": 8.9
+      }
+    },
+    {
+      "homeTeam": "Ювентус",
+      "awayTeam": "Галатасарай",
+      "date": "2026-02-26",
+      "time": "00:00",
+      "league": "Лига 1",
+      "odds": {
+        "home": 1.5,
+        "draw": 5.1,
+        "away": 5.4
+      }
+    },
+    {
+      "homeTeam": "ВфБ Штутгарт",
+      "awayTeam": "ФК Селтик",
+      "date": "2026-02-26",
+      "time": "21:45",
+      "league": "Лига 2",
+      "odds": {
+        "home": 1.4,
+        "draw": 5.3,
+        "away": 6.7
+      }
+    },
+    {
+      "homeTeam": "ТК Ференцварош",
+      "awayTeam": "ПФК Лудогорец Разград",
+      "date": "2026-02-26",
+      "time": "21:45",
+      "league": "Лига 2",
+      "odds": {
+        "home": 1.62,
+        "draw": 4.1,
+        "away": 5.3
+      }
+    },
+    {
+      "homeTeam": "ФК Виктория Пльзень",
+      "awayTeam": "Панатинаикос",
+      "date": "2026-02-26",
+      "time": "21:45",
+      "league": "Лига 2",
+      "odds": {
+        "home": 2.06,
+        "draw": 3.3,
+        "away": 3.82
+      }
+    },
+    {
+      "homeTeam": "ФК Црвена Звезда",
+      "awayTeam": "Лилль ОСК",
+      "date": "2026-02-26",
+      "time": "21:45",
+      "league": "Лига 2",
+      "odds": {
+        "home": 2.63,
+        "draw": 3.36,
+        "away": 2.68
+      }
+    },
+    {
+      "homeTeam": "Болонья",
+      "awayTeam": "Бранн СК",
+      "date": "2026-02-27",
+      "time": "00:00",
+      "league": "Лига 2",
+      "odds": {
+        "home": 1.42,
+        "draw": 4.75,
+        "away": 7.4
+      }
+    },
+    {
+      "homeTeam": "КРК Генк",
+      "awayTeam": "ГНК Динамо Загреб",
+      "date": "2026-02-27",
+      "time": "00:00",
+      "league": "Лига 2",
+      "odds": {
+        "home": 2.17,
+        "draw": 3.5,
+        "away": 3.29
+      }
+    },
+    {
+      "homeTeam": "Ноттингем Форест",
+      "awayTeam": "Фенербахче",
+      "date": "2026-02-27",
+      "time": "00:00",
+      "league": "Лига 2",
+      "odds": {
+        "home": 1.8,
+        "draw": 3.8,
+        "away": 4.33
+      }
+    },
+    {
+      "homeTeam": "Сельта",
+      "awayTeam": "ФК ПАОК",
+      "date": "2026-02-27",
+      "time": "00:00",
+      "league": "Лига 2",
+      "odds": {
+        "home": 1.77,
+        "draw": 3.7,
+        "away": 4.7
+      }
+    },
+    {
+      "homeTeam": "Самсунспор",
+      "awayTeam": "КФ Шкендия",
+      "date": "2026-02-26",
+      "time": "21:45",
+      "league": "Лига 3",
+      "odds": {
+        "home": 1.31,
+        "draw": 5.3,
+        "away": 9.8
+      }
+    },
+    {
+      "homeTeam": "ХНК Риека",
+      "awayTeam": "Омония Никосия",
+      "date": "2026-02-26",
+      "time": "21:45",
+      "league": "Лига 3",
+      "odds": {
+        "home": 2.11,
+        "draw": 3.4,
+        "away": 3.56
+      }
+    },
+    {
+      "homeTeam": "Фиорентина",
+      "awayTeam": "Ягеллония Белосток",
+      "date": "2026-02-26",
+      "time": "21:45",
+      "league": "Лига 3",
+      "odds": {
+        "home": 1.5,
+        "draw": 4.5,
+        "away": 6
+      }
+    },
+    {
+      "homeTeam": "НК Целе",
+      "awayTeam": "КФ Дрита Гйилан",
+      "date": "2026-02-26",
+      "time": "21:45",
+      "league": "Лига 3",
+      "odds": {
+        "home": 1.27,
+        "draw": 6,
+        "away": 10
+      }
+    },
+    {
+      "homeTeam": "ККС Лех Познань",
+      "awayTeam": "КуПС Куопио",
+      "date": "2026-02-27",
+      "time": "00:00",
+      "league": "Лига 3",
+      "odds": {
+        "home": 1.2,
+        "draw": 7.2,
+        "away": 13
+      }
+    },
+    {
+      "homeTeam": "ФК Лозанна Спорт",
+      "awayTeam": "СК Сигма Оломоуц",
+      "date": "2026-02-27",
+      "time": "00:00",
+      "league": "Лига 3",
+      "odds": {
+        "home": 2.08,
+        "draw": 3.34,
+        "away": 3.7
+      }
+    },
+    {
+      "homeTeam": "Кристал Пэлас",
+      "awayTeam": "ХСК Зрински Мостар",
+      "date": "2026-02-27",
+      "time": "00:00",
+      "league": "Лига 3",
+      "odds": {
+        "home": 1.11,
+        "draw": 9.8,
+        "away": 21
+      }
+    },
+    {
+      "homeTeam": "АЗ Алкмар",
+      "awayTeam": "ФК Ноа",
+      "date": "2026-02-27",
+      "time": "00:00",
+      "league": "Лига 3",
+      "odds": {
+        "home": 1.29,
+        "draw": 5.8,
+        "away": 9.6
+      }
+    },
+    {
+      "homeTeam": "Айнтрахт Франкфурт (Дօ 19)",
+      "awayTeam": "КП Спортинг (Дօ 19)",
+      "date": "2026-02-24",
+      "time": "19:00",
+      "league": "Лига 4",
+      "odds": {
+        "home": 3.3,
+        "draw": 3.5,
+        "away": 2.08
+      }
+    },
+    {
+      "homeTeam": "Уолсолл",
+      "awayTeam": "Милтон Кинс Донс",
+      "date": "2026-02-24",
+      "time": "00:00",
+      "league": "Лига 5",
+      "odds": {
+        "home": 3.32,
+        "draw": 3.18,
+        "away": 2.2
+      }
+    },
+    {
+      "homeTeam": "Аккрингтон Стэнли",
+      "awayTeam": "ФК Барнет",
+      "date": "2026-02-24",
+      "time": "23:45",
+      "league": "Лига 5",
+      "odds": {
+        "home": 3.68,
+        "draw": 3.45,
+        "away": 1.97
+      }
+    },
+    {
+      "homeTeam": "ФК Солфорд Сити",
+      "awayTeam": "Шресбери Таун",
+      "date": "2026-02-24",
+      "time": "23:45",
+      "league": "Лига 5",
+      "odds": {
+        "home": 1.64,
+        "draw": 3.93,
+        "away": 4.8
+      }
+    },
+    {
+      "homeTeam": "АФК Харрогейт Таун",
+      "awayTeam": "Челтенхем Таун",
+      "date": "2026-02-27",
+      "time": "23:45",
+      "league": "Лига 5",
+      "odds": {
+        "home": 2.83,
+        "draw": 3.14,
+        "away": 2.51
+      }
+    },
+    {
+      "homeTeam": "Суиндон Таун",
+      "awayTeam": "Бристоль Роверс",
+      "date": "2026-02-28",
+      "time": "16:30",
+      "league": "Лига 5",
+      "odds": {
+        "home": 1.94,
+        "draw": 3.53,
+        "away": 3.68
+      }
+    },
+    {
+      "homeTeam": "Шресбери Таун",
+      "awayTeam": "Уолсолл",
+      "date": "2026-02-28",
+      "time": "16:30",
+      "league": "Лига 5",
+      "odds": {
+        "home": 2.63,
+        "draw": 3,
+        "away": 2.81
+      }
+    },
+    {
+      "homeTeam": "Кембридж Юнайтед",
+      "awayTeam": "Милтон Кинс Донс",
+      "date": "2026-02-28",
+      "time": "16:30",
+      "league": "Лига 5",
+      "odds": {
+        "home": 2.35,
+        "draw": 3.15,
+        "away": 3.05
+      }
+    },
+    {
+      "homeTeam": "Олдем Атлетик",
+      "awayTeam": "Кроли Таун",
+      "date": "2026-02-28",
+      "time": "19:00",
+      "league": "Лига 5",
+      "odds": {
+        "home": 1.95,
+        "draw": 3.52,
+        "away": 3.69
+      }
+    },
+    {
+      "homeTeam": "Ноттс Каунти",
+      "awayTeam": "Гримсби Таун",
+      "date": "2026-02-28",
+      "time": "19:00",
+      "league": "Лига 5",
+      "odds": {
+        "home": 2.28,
+        "draw": 3.19,
+        "away": 3.15
+      }
+    },
+    {
+      "homeTeam": "Флитвуд Таун",
+      "awayTeam": "АФК Ньюпорт Каунти",
+      "date": "2026-02-28",
+      "time": "19:00",
+      "league": "Лига 5",
+      "odds": {
+        "home": 1.69,
+        "draw": 3.8,
+        "away": 4.6
+      }
+    },
+    {
+      "homeTeam": "Кру Александра",
+      "awayTeam": "Транмир Роверс",
+      "date": "2026-02-28",
+      "time": "19:00",
+      "league": "Лига 5",
+      "odds": {
+        "home": 2.08,
+        "draw": 3.62,
+        "away": 3.19
+      }
+    },
+    {
+      "homeTeam": "ФК Бромли",
+      "awayTeam": "Аккрингтон Стэнли",
+      "date": "2026-02-28",
+      "time": "19:00",
+      "league": "Лига 5",
+      "odds": {
+        "home": 1.73,
+        "draw": 3.41,
+        "away": 5
+      }
+    },
+    {
+      "homeTeam": "Бэрроу АФК",
+      "awayTeam": "Джиллингем",
+      "date": "2026-02-28",
+      "time": "19:00",
+      "league": "Лига 5",
+      "odds": {
+        "home": 3.12,
+        "draw": 3.19,
+        "away": 2.3
+      }
+    }
+  ]
+}
