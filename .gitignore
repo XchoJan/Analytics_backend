@@ -8,3 +8,7 @@ database.sqlite-wal
 database.sqlite-shm
 
 bash_scripts
+
+nginx
+
+.idea
