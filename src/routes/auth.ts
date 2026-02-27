@@ -54,13 +54,13 @@ authRouter.post('/register', async (req: Request, res: Response, next) => {
     // Валидация никнейма
     const usernameValidation = validateUsername(username);
     if (!usernameValidation.valid) {
-      throw new HttpError(400, 'INVALID_USERNAME', usernameValidation.error);
+      throw new HttpError(400, 'INVALID_USERNAME', usernameValidation.error || 'Неверный никнейм');
     }
 
     // Валидация пароля
     const passwordValidation = validatePassword(password);
     if (!passwordValidation.valid) {
-      throw new HttpError(400, 'INVALID_PASSWORD', passwordValidation.error);
+      throw new HttpError(400, 'INVALID_PASSWORD', passwordValidation.error || 'Неверный пароль');
     }
 
     // Создаем пользователя

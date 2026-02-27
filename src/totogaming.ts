@@ -26,7 +26,8 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
     console.log('[Totogaming] Launching browser...');
     // Используем headless: 'new' с улучшенными настройками для обхода защиты
     browser = await puppeteer.launch({
-      headless: 'new',
+      // В продакшене оставляем 'new', но приводим тип к any, чтобы не ругался TypeScript
+      headless: 'new' as any,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',

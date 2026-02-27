@@ -72,6 +72,7 @@ export function optionalAuthMiddleware(req: AuthRequest, res: Response, next: Ne
           username: user.username,
           role: user.role,
           premium: Boolean(user.premium),
+          premiumUntil: user.premiumUntil,
         };
       }
     }

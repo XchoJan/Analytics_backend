@@ -23,6 +23,10 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
 
+app.get("/ping", (_req, res) => {
+  res.json({ pong: true, timestamp: new Date().toISOString() });
+});
+
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/payments", paymentsRouter);
