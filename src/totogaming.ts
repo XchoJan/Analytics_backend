@@ -52,7 +52,7 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
-    
+
     // Перехватываем сетевые запросы для отладки
     page.on('response', async (response) => {
       const url = response.url();
@@ -60,17 +60,17 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
         console.log(`[Totogaming] Network request: ${url} - Status: ${response.status()}`);
       }
     });
-    
+
     // Устанавливаем реалистичный User-Agent (актуальная версия Chrome)
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36');
-    
+
     // Убираем все признаки автоматизации
     await page.evaluateOnNewDocument(() => {
       // Убираем webdriver флаг
       Object.defineProperty(navigator, 'webdriver', {
         get: () => false,
       });
-      
+
       // Переопределяем permissions
       const originalQuery = window.navigator.permissions.query;
       window.navigator.permissions.query = (parameters) => (
@@ -78,22 +78,22 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
           Promise.resolve({ state: Notification.permission } as PermissionStatus) :
           originalQuery(parameters)
       );
-      
+
       // Добавляем реалистичные свойства
       Object.defineProperty(navigator, 'plugins', {
         get: () => [1, 2, 3, 4, 5],
       });
-      
+
       Object.defineProperty(navigator, 'languages', {
         get: () => ['ru-RU', 'ru', 'en-US', 'en'],
       });
-      
+
       // Переопределяем chrome объект
       (window as any).chrome = {
         runtime: {},
       };
     });
-    
+
     // Устанавливаем реалистичные заголовки
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
@@ -107,9 +107,9 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
       'Sec-Fetch-User': '?1',
       'Cache-Control': 'max-age=0',
     });
-    
+
     console.log('[Totogaming] Navigating to page...');
-    
+
     // Сначала заходим на главную страницу, чтобы установить cookies
     try {
       await page.goto('https://sport.totogaming.am', {
@@ -121,21 +121,21 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
     } catch (e) {
       console.warn('[Totogaming] Could not load main page, continuing...');
     }
-    
+
     // Теперь переходим на нужную страницу
     await page.goto(TOTOGAMING_URL, {
       waitUntil: 'networkidle0',
-      timeout: 20000, // 20 секунд
+      timeout: 60000, // 20 секунд
     });
-    
+
     console.log('[Totogaming] Page loaded, waiting for dynamic content...');
-    
+
     // Проверяем наличие iframe - контент загружается в iframe!
     console.log('[Totogaming] Checking for iframe...');
     await new Promise(resolve => setTimeout(resolve, 3000)); // Ждем загрузки iframe
-    
+
     const iframeElement = await page.$('#sport_div_iframe iframe');
-    
+
     if (!iframeElement) {
       // Пробуем найти iframe другим способом
       const allIframes = await page.$$('iframe');
@@ -144,14 +144,14 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
         throw new Error('Iframe not found! Content might be loaded differently.');
       }
     }
-    
+
     console.log('[Totogaming] Iframe found, waiting for it to load...');
     await new Promise(resolve => setTimeout(resolve, 10000)); // Увеличиваем время ожидания
-    
+
     // Получаем frame из iframe
     const frames = page.frames();
     console.log(`[Totogaming] Total frames: ${frames.length}`);
-    
+
     let contentFrame = null;
     for (const frame of frames) {
       const frameUrl = frame.url();
@@ -162,7 +162,7 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
         break;
       }
     }
-    
+
     if (!contentFrame) {
       console.error('[Totogaming] Content frame not found! Available frames:');
       for (const frame of frames) {
@@ -170,13 +170,13 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
       }
       throw new Error('Content frame not found in iframe!');
     }
-    
+
     console.log('[Totogaming] Content frame found, checking iframe content...');
-    
+
     // Ждем загрузки контента в iframe
     console.log('[Totogaming] Waiting for content in iframe...');
     let matchItemsFound = false;
-    
+
     try {
       await contentFrame.waitForFunction(
         () => {
@@ -184,7 +184,7 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
         },
         { timeout: 15000 } // 15 секунд
       );
-      
+
       const count = await contentFrame.evaluate(() => {
         return document.querySelectorAll('.tg__match_item, [class*="match_item"]').length;
       });
@@ -192,30 +192,30 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
       matchItemsFound = true;
     } catch (e) {
       console.warn('[Totogaming] waitForFunction timeout in iframe, trying manual check...');
-      
+
       // Если waitForFunction не сработал, проверяем вручную
       for (let i = 0; i < 10; i++) { // Максимум 20 секунд (10 * 2)
         const count = await contentFrame.evaluate(() => {
           return document.querySelectorAll('.tg__match_item, [class*="match_item"]').length;
         });
-        
+
         if (count > 0) {
           console.log(`[Totogaming] Found ${count} match items in iframe after ${i * 2} seconds`);
           matchItemsFound = true;
           break;
         }
-        
+
         console.log(`[Totogaming] Waiting for match items in iframe... (${i * 2}s)`);
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
     }
-    
+
     // Используем contentFrame для парсинга
     const targetPage = contentFrame;
-    
+
     // Имитируем человеческое поведение - небольшая задержка
     await new Promise(resolve => setTimeout(resolve, 3000));
-    
+
     // Сохраняем HTML из iframe для отладки
     const iframeHTML = await contentFrame.evaluate(() => document.documentElement.outerHTML);
     const htmlPath = path.join(process.cwd(), 'debug-totogaming.html');
@@ -237,10 +237,10 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
     }
 
     console.log('[Totogaming] Match items found in iframe, extracting...');
-    
+
     // Дополнительное ожидание для полной загрузки контента в iframe
     await new Promise(resolve => setTimeout(resolve, 3000));
-    
+
     // Имитируем человеческое поведение - прокрутка страницы в iframe
     await targetPage.evaluate(async () => {
       await new Promise((resolve) => {
@@ -258,21 +258,21 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
         }, 100);
       });
     });
-    
+
     // Небольшая задержка после прокрутки
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     // Прокручиваем обратно вверх в iframe
     await targetPage.evaluate(() => {
       window.scrollTo(0, 0);
     });
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Пробуем разные селекторы для поиска матчей
     console.log('[Totogaming] Trying to find match items...');
     let matchItemsCount = 0;
     let workingSelector = '.tg__match_item';
-    
+
     // Пробуем разные селекторы
     const selectors = [
       '.tg__match_item',
@@ -280,7 +280,7 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
       '[class*="prematch"] [class*="match"]',
       '.prematch_event_odds_container',
     ];
-    
+
     for (const selector of selectors) {
       try {
         matchItemsCount = await targetPage.evaluate((sel) => {
@@ -296,14 +296,14 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
         console.warn(`[Totogaming] Error with selector "${selector}":`, e);
       }
     }
-    
+
     if (matchItemsCount === 0) {
       // Сохраняем HTML перед ошибкой из iframe
       const fullHTML = await targetPage.evaluate(() => document.documentElement.outerHTML);
       const htmlPath = path.join(process.cwd(), 'debug-totogaming.html');
       fs.writeFileSync(htmlPath, fullHTML, 'utf-8');
       console.log(`[Totogaming] HTML saved to: ${htmlPath}`);
-      
+
       // Пробуем найти альтернативные селекторы в iframe
       const alternativeSelectors = await targetPage.evaluate(() => {
         return {
@@ -318,12 +318,12 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
       console.log('[Totogaming] Alternative selectors check:', JSON.stringify(alternativeSelectors, null, 2));
       throw new Error('No match items found. Page might require authentication or use different structure. HTML saved to debug-totogaming.html');
     }
-    
+
     const matches = await targetPage.evaluate((selector) => {
       // Ищем элементы матчей используя рабочий селектор
       const matchItems = document.querySelectorAll(selector);
       const results: any[] = [];
-      
+
       console.log(`[Totogaming] Found ${matchItems.length} match items for parsing`);
 
       matchItems.forEach((item) => {
@@ -369,10 +369,10 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
             const currentYear = currentDate.getFullYear();
             const currentMonth = currentDate.getMonth() + 1;
             const currentDay = currentDate.getDate();
-            
+
             const matchDay = parseInt(day);
             const matchMonth = parseInt(month);
-            
+
             // Определяем год
             let year = currentYear;
             if (matchMonth < currentMonth) {
@@ -385,7 +385,7 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
               }
             }
             // Если matchMonth > currentMonth, это текущий год
-            
+
             fullDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
           } else {
             // Если дата не найдена, используем сегодняшнюю
@@ -404,7 +404,7 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
           oddsElements.forEach((oddEl) => {
             const oddNameEl = oddEl.querySelector('.tg__match_item_odd_name');
             const oddValueEl = oddEl.querySelector('.prematch_stake_odd_factor');
-            
+
             if (!oddNameEl || !oddValueEl) return;
 
             const oddName = oddNameEl.textContent?.trim() || '';
@@ -443,7 +443,7 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
     }, workingSelector);
 
     console.log(`[Totogaming] Found ${matches.length} matches with odds`);
-    
+
     // Сохраняем результаты парсинга в JSON файл
     const debugData = {
       timestamp: new Date().toISOString(),
@@ -455,16 +455,16 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
         url: page.url(),
       }
     };
-    
+
     const jsonPath = path.join(process.cwd(), 'debug-totogaming.json');
     fs.writeFileSync(jsonPath, JSON.stringify(debugData, null, 2), 'utf-8');
     console.log(`[Totogaming] Debug data saved to: ${jsonPath}`);
-    
+
     return matches;
 
   } catch (error: any) {
     console.error('[Totogaming] Error scraping matches:', error);
-    
+
     // Сохраняем информацию об ошибке в JSON файл
     try {
       const debugData = {
@@ -476,14 +476,14 @@ export async function scrapeTotogamingMatches(): Promise<MatchWithOdds[]> {
         matchesFound: 0,
         matches: [],
       };
-      
+
       const jsonPath = path.join(process.cwd(), 'debug-totogaming.json');
       fs.writeFileSync(jsonPath, JSON.stringify(debugData, null, 2), 'utf-8');
       console.log(`[Totogaming] Error debug data saved to: ${jsonPath}`);
     } catch (saveError) {
       console.warn('[Totogaming] Could not save error debug data:', saveError);
     }
-    
+
     throw error;
   } finally {
     if (browser) {
