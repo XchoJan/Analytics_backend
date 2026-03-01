@@ -69,10 +69,10 @@ async function scrapeSingleUrl(url: string, leagueName: string): Promise<MatchWi
     
     console.log('[Vbet] Navigating to page...');
     
-    // Переходим на страницу
+    // domcontentloaded быстрее чем networkidle0; на тяжёлых сайтах networkidle0 часто не наступает
     await page.goto(url, {
-      waitUntil: 'networkidle0',
-      timeout: 20000,
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
     });
     
     console.log('[Vbet] Page loaded, waiting for content...');
