@@ -6,6 +6,7 @@ import { predictionRouter } from "./routes/prediction.js";
 import { authRouter } from "./routes/auth.js";
 import { adminRouter } from "./routes/admin.js";
 import { paymentsRouter } from "./routes/payments.js";
+import { telegramWebhookRouter } from "./routes/telegramWebhook.js";
 import { HttpError } from "./errors.js";
 import "./db.js"; // Инициализируем базу данных
 import "./config.js"; // Инициализируем конфигурацию
@@ -30,6 +31,7 @@ app.get("/ping", (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/payments", paymentsRouter);
+app.use("/api/telegram", telegramWebhookRouter);
 app.use("/api", predictionRouter);
 
 app.use(

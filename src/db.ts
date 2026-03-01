@@ -45,6 +45,16 @@ try {
   }
 }
 
+try {
+  db.exec(`
+    ALTER TABLE payments ADD COLUMN telegramPaymentChargeId TEXT;
+  `);
+} catch (e: any) {
+  if (!e.message.includes('duplicate column name')) {
+    console.warn('[DB] Migration warning:', e.message);
+  }
+}
+
 // Таблица матчей (кеш от парсинга, обновляется по крону)
 db.exec(`
   CREATE TABLE IF NOT EXISTS matches (
@@ -80,13 +90,22 @@ db.exec(`
     plan TEXT NOT NULL,
     amount REAL NOT NULL,
     currency TEXT NOT NULL DEFAULT 'USD',
-    cryptomusOrderId TEXT UNIQUE,
+    orderId TEXT UNIQUE,
     status TEXT NOT NULL DEFAULT 'pending',
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
     updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (userId) REFERENCES users(id)
   )
 `);
+
+// Миграция: переименовать cryptomusOrderId -> orderId (для существующих БД)
+try {
+  db.exec(`ALTER TABLE payments RENAME COLUMN cryptomusOrderId TO orderId`);
+} catch (e: any) {
+  if (!e.message?.includes('no such column')) {
+    console.warn('[DB] Migration cryptomusOrderId->orderId:', e.message);
+  }
+}
 
 console.log('[DB] Database initialized');
 
