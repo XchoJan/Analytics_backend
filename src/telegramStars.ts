@@ -8,9 +8,9 @@ export type PlanType = 'week' | 'month' | 'threeMonths';
 // Telegram Stars: ~1 Star ≈ $0.013 (приблизительно)
 // Цены в Stars для цифровых товаров
 const PLAN_STARS: Record<PlanType, number> = {
-  week: 1200,    // ~$15
-  month: 4000,   // ~$50
-  threeMonths: 9500, // ~$120
+  week: 1,    // 1 Star
+  month: 1,   // 1 Star
+  threeMonths: 1, // 1 Star
 };
 
 const PLAN_TITLES: Record<PlanType, string> = {
