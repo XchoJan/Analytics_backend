@@ -5,12 +5,11 @@ const TELEGRAM_API = 'https://api.telegram.org/bot';
 
 export type PlanType = 'week' | 'month' | 'threeMonths';
 
-// Telegram Stars: ~1 Star ≈ $0.013 (приблизительно)
-// Цены в Stars для цифровых товаров
+// Цены в Telegram Stars
 const PLAN_STARS: Record<PlanType, number> = {
-  week: 1,    // 1 Star
-  month: 1,   // 1 Star
-  threeMonths: 1, // 1 Star
+  week: 700,
+  month: 2200,
+  threeMonths: 5000,
 };
 
 const PLAN_TITLES: Record<PlanType, string> = {
@@ -21,8 +20,8 @@ const PLAN_TITLES: Record<PlanType, string> = {
 
 const PLAN_DESCRIPTIONS: Record<PlanType, string> = {
   week: 'Полный доступ к AI прогнозам на 7 дней',
-  month: 'Полный доступ к AI прогнозам на 30 дней',
-  threeMonths: 'Полный доступ к AI прогнозам на 90 дней (выгодно!)',
+  month: 'Полный доступ к AI прогнозам на 30 дней. Выгодно!',
+  threeMonths: 'Полный доступ к AI прогнозам на 90 дней. Выгодно!',
 };
 
 export function getPlanStars(plan: PlanType): number {
