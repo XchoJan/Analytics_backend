@@ -107,5 +107,26 @@ try {
   }
 }
 
+// Статистика запусков приложения (ключ — значение)
+db.exec(`
+  CREATE TABLE IF NOT EXISTS app_stats (
+    key TEXT PRIMARY KEY,
+    value INTEGER NOT NULL DEFAULT 0
+  )
+`);
+const launchRow = db.prepare("SELECT 1 FROM app_stats WHERE key = 'total_launches'").get();
+if (!launchRow) {
+  db.prepare("INSERT INTO app_stats (key, value) VALUES ('total_launches', 0)").run();
+}
+
+export function incrementAppLaunch(): void {
+  db.prepare("UPDATE app_stats SET value = value + 1 WHERE key = 'total_launches'").run();
+}
+
+export function getAppLaunchCount(): number {
+  const row = db.prepare("SELECT value FROM app_stats WHERE key = 'total_launches'").get() as { value: number } | undefined;
+  return row?.value ?? 0;
+}
+
 console.log('[DB] Database initialized');
 

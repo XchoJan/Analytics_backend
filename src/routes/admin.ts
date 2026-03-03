@@ -4,6 +4,7 @@ import { getVbetUrls, setVbetUrls } from "../config.js";
 import { refreshMatches } from "../matchesStore.js";
 import { runPredictionGeneration } from "../predictionCron.js";
 import { getPredictionCounts } from "../predictionsStore.js";
+import { db, getAppLaunchCount } from "../db.js";
 import { HttpError } from "../errors.js";
 
 export const adminRouter = Router();
@@ -78,6 +79,39 @@ adminRouter.post("/generate-predictions", async (req: AuthRequest, res, next) =>
 
     runPredictionGeneration().catch((err) => console.error('[Admin] Generate predictions failed:', err));
     res.json({ success: true, message: 'Генерация прогнозов запущена. Подождите 2–3 минуты.' });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// Статистика для админа
+adminRouter.get("/stats", async (req: AuthRequest, res, next) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      throw new HttpError(403, 'FORBIDDEN', 'Доступ запрещен. Требуется роль администратора.');
+    }
+
+    const totalUsers = (db.prepare("SELECT COUNT(*) as c FROM users").get() as { c: number }).c;
+    const premiumCount = (db.prepare(
+      "SELECT COUNT(*) as c FROM users WHERE premium = 1 AND (premiumUntil IS NULL OR premiumUntil > datetime('now'))"
+    ).get() as { c: number }).c;
+    const totalLaunches = getAppLaunchCount();
+    const successfulPayments = (db.prepare("SELECT COUNT(*) as c FROM payments WHERE status = 'paid' OR status = 'paid_over'").get() as { c: number }).c;
+    const newUsersLast7Days = (db.prepare(
+      "SELECT COUNT(*) as c FROM users WHERE createdAt >= date('now', '-7 days')"
+    ).get() as { c: number }).c;
+    const newPaymentsLast7Days = (db.prepare(
+      "SELECT COUNT(*) as c FROM payments WHERE (status = 'paid' OR status = 'paid_over') AND updatedAt >= date('now', '-7 days')"
+    ).get() as { c: number }).c;
+
+    res.json({
+      totalUsers,
+      premiumCount,
+      totalLaunches,
+      successfulPayments,
+      newUsersLast7Days,
+      newPaymentsLast7Days,
+    });
   } catch (e) {
     next(e);
   }

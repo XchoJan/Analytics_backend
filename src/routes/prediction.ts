@@ -3,6 +3,7 @@ import { analyzeMatch } from "../ai.js";
 import { getMatchesFromDb } from "../matchesStore.js";
 import { getRandomPrediction } from "../predictionsStore.js";
 import { getStats } from "../stats.js";
+import { incrementAppLaunch } from "../db.js";
 import { authMiddleware, AuthRequest } from "../middleware/auth.js";
 import { findUserById, canUsePrediction, updateLastPredictionDate } from "../models/user.js";
 import { HttpError } from "../errors.js";
@@ -156,6 +157,16 @@ predictionRouter.get("/stats", async (req, res, next) => {
   try {
     const stats = getStats();
     res.json(stats);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// Учёт запуска приложения (вызывается с фронта раз за сессию)
+predictionRouter.post("/stats/launch", async (_req, res, next) => {
+  try {
+    incrementAppLaunch();
+    res.json({ ok: true });
   } catch (e) {
     next(e);
   }
